@@ -10,6 +10,20 @@ const List = () => {
             window.electronAPIs.on("robot:list-uid", res => {
                 setListUid(res.data)
             });
+        } else {
+            setListUid([
+                {
+                    info: {
+                        date: "25-02-08",
+                        uid: "61570948720725",
+                        username: "test-1",
+                        type: "takecare",
+                    },
+                    config: {
+                        addFriend: true,
+                    }
+                }
+            ])
         }
     }, []);
 
