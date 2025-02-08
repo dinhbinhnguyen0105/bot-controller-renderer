@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 
 import styles from "./List.module.css";
+// import Config from "../../Modals/Config/Config";
 
-const List = () => {
-    const [listUid, setListUid] = useState([]);
+const List = ({ setUidInfo, listUid, setListUid }) => {
     useEffect(() => {
         if (window?.electronAPIs) {
             window.electronAPIs.send("robot:list-uid", { payload: null });
             window.electronAPIs.on("robot:list-uid", res => {
-                setListUid(res.data)
+                setListUid(res.data);
             });
         } else {
             setListUid([
@@ -22,10 +22,21 @@ const List = () => {
                     config: {
                         addFriend: true,
                     }
-                }
-            ])
+                },
+                {
+                    info: {
+                        date: "25-02-08",
+                        uid: "001",
+                        username: "test-2",
+                        type: "takecare",
+                    },
+                    config: {
+                        addFriend: true,
+                    }
+                },
+            ]);
         }
-    }, []);
+    }, [setListUid]);
 
     const handleLaunchBrowser = (e, uid) => {
         if (window?.electronAPIs) {
@@ -84,7 +95,9 @@ const List = () => {
             window.electronAPIs.send("robot:del-uid", { payload: listUid[index].info.uid });
         }
     };
-    const handleConfig = index => { index };
+    const handleConfig = index => {
+        setUidInfo(listUid[index]);
+    };
 
     return (
         <div className={styles.list}>
