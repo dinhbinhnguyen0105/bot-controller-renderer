@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import styles from "./Create.module.css"
 
 const Form = ({ state, setState }) => {
     const onInputChanged = (e) => {

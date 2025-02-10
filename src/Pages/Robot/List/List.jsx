@@ -1,5 +1,5 @@
-import { useState } from "react";
-import styles from "./List.module.css";
+// import { useState } from "react";
+// import styles from "./List.module.css";
 
 const List = ({ listUID, setListUID, callAPIs }) => {
     const handleSort = (field) => {
@@ -50,6 +50,7 @@ const List = ({ listUID, setListUID, callAPIs }) => {
                             <th>Reel</th>
                             <th>Join Group</th>
                             <th>Post New Feed</th>
+                            <th>Post Groups</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,9 +59,9 @@ const List = ({ listUID, setListUID, callAPIs }) => {
                                 <td>{info.date}</td>
                                 <td>{info.uid}</td>
                                 <td>{info.username ? (
-                                    <button onClick={() => callAPIs("robot:launch-browser", info.uid)}>Open {info.username}</button>
+                                    <button onClick={(e) => callAPIs({ method: "robot:launch-browser", value: info.uid, setListUID: setListUID, e: e })}>Open {info.username}</button>
                                 ) : (
-                                    <button onClick={() => callAPIs("robot:get-name", info.uid)}>Get username</button>
+                                    <button onClick={(e) => callAPIs({ method: "robot:get-name", value: info.uid, setListUID: setListUID, e: e })}>Get username</button>
                                 )}</td>
                                 <td>
                                     <input
@@ -105,9 +106,16 @@ const List = ({ listUID, setListUID, callAPIs }) => {
                                     />
                                 </td>
                                 <td>
+                                    <input
+                                        type="checkbox"
+                                        checked={config.postGroups || false}
+                                        onChange={e => handleInputChange(index, "postGroups", e.target.checked)}
+                                    />
+                                </td>
+                                <td>
                                     <button onDoubleClick={() => callAPIs("robot:del-uid", info.uid)}>Delete</button>
                                 </td>
-                                <td><button onClick={() => callAPIs("robot:detail-uid", info.uid)}>Details</button></td>
+                                <td><button onClick={(e) => callAPIs({ method: "robot:config-uid", value: { info: info, config: config }, setListUID: setListUID, e: e })}>Config</button></td>
                             </tr>
                         ))}
                     </tbody>

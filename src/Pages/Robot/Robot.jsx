@@ -1,97 +1,99 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import styles from "./Robot.module.css";
 import List from "./List/List";
-import Detail from "./modals/Detail/Detail";
+import Modify from "./modals/Modify/Modify";
 
 const Robot = () => {
     const [listUID, setListUID] = useState(null);
     const [info, setInfo] = useState(null);
     const [isDetailOpen, setDetailOpen] = useState(false);
-    const [isCreateOpen, setCreateOpen] = useState(false);
+    // const [isCreateOpen, setCreateOpen] = useState(false);
 
     useEffect(() => {
         if (window?.electronAPIs) {
             window.electronAPIs.send("robot:list-uid", { payload: null });
             window.electronAPIs.on("robot:list-uid", res => setListUID(res.data));
         } else {
-            setListUID([
-                {
-                    info: {
-                        date: "25-02-08",
-                        uid: "61570948720725",
-                        username: "test-1",
-                        type: "takecare",
-                    },
-                    config: {
-                        addFriend: true,
-                    }
-                },
-                {
-                    info: {
-                        date: "25-02-08",
-                        uid: "001",
-                        username: "test-2",
-                        type: "takecare",
-                    },
-                    config: {
-                        addFriend: true,
-                    }
-                },
-            ]);
+            fetch("http://localhost:3000/api/robot")
+                .then(res => res.json())
+                .then(res => setListUID(res))
+                .catch(err => console.error(err));
         };
     }, []);
 
-    const callAPIs = async (method, value, UIDIndex) => {
-        if (!listUID.length) { console.log("listUID = []"); return; };
-        if (window?.electronAPIs) {
-            switch (method) {
-                case "robot:list-uid": {
-                    window.electronAPIs.send("robot:list-uid", { payload: null });
-                    break;
-                }
-                case "robot:put-uid": {
-                    window.electronAPIs.send("robot:put-uid", { payload: value });
-                    break;
-                }
-                case "robot:del-uid": {
-                    window.electronAPIs.send("robot:del-uid", { payload: value });
-                    break;
-                }
-                case "robot:launch-browser": {
-                    window.electronAPIs.send("robot:launch-browser", { payload: value });
-                    break;
-                }
-                case "robot:get-name": {
-                    window.electronAPIs.send("robot:get-name", { payload: value });
-                    break;
-                }
-                case "robot:detail-uid": {
-                    setInfo(value);
-                    setDetailOpen(true);
-                    break;
-                }
-                default: throw new Error("Invalid method");
-            };
-        } else {
-            if (method === "robot:detail-uid") {
-                setInfo(value);
+    const callAPIs = useCallback(({ method, value, setListUID, e }) => {
+        const serverUrl = "http://localhost:3000/api";
+        const defaultLabel = e.target.textContent;
+        switch (method) {
+            case "robot:list-uid": {
+                fetch(serverUrl)
+                    .then(res => res.json())
+                    .then(res => setListUID(res))
+                    .catch(err => console.error(err));
+                break;
+            }
+            case "robot:put-uid": {
+
+                break;
+            }
+            case "robot:del-uid": {
+
+                break;
+            }
+            case "robot:launch-browser": {
+                e.target.textContent = "Opening ...";
+                fetch(`${serverUrl}/robot-launch-browser`, {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ uid: value })
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        console.log(res);
+                        e.target.textContent = defaultLabel;
+                    })
+                    .catch(err => {
+                        e.target.textContent = defaultLabel;
+                        console.error(err);
+                    });
+                break;
+            }
+            case "robot:get-name": {
+
+                break;
+            }
+            case "robot:config-uid": {
                 setDetailOpen(true);
-            };
+                setInfo(value);
+                break;
+            }
+            default: throw new Error("Invalid method");
         };
-    };
+    }, []);
+
+    const handleStart = () => {
+        console.log(listUID);
+    }
 
     return (
-        <div className={styles.robot}>
-            <button onClick={openCreate}>
-                Add
-            </button>
-            {isCreateOpen && <Create isOpen={isCreateOpen} onClose={closeCreate} />}
-            {configModalDisplay && <Config isOpen={configModalDisplay} onClose={closeConfig} uidInfo={uidInfo} />}
-            {/* <h1>Robot page</h1> */}
-            <List setUidInfo={(info) => { setUidInfo(info); openConfig(); }} listUid={listUid} setListUid={setListUid} />
-        </div>
-    );
+        <>
+            <div className="robot">
+                <div className="header">
+                    <button onClick={() => setCreateOpen(true)}>Add</button>
+                </div>
+                {listUID ? (
+                    <List listUID={listUID} setListUID={setListUID} callAPIs={callAPIs} />
+                ) : (
+                    <p>Loading...</p>
+                )}
+                <div className="footer">
+                    <button onClick={handleStart}>Start</button>
+                </div>
+            </div>
+            {isDetailOpen && info && <Modify uidInfo={info} callAPIs={callAPIs} isOpen={isDetailOpen} onClose={() => setDetailOpen(false)} />}
+        </>
+    )
 }
 
 export default Robot;
