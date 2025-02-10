@@ -12,7 +12,7 @@ app.use(express.json());
 // Middleware: cho phép CORS
 app.use(cors());
 
-const robots = [
+let robots = [
     {
         info: {
             date: "25-02-08",
@@ -59,7 +59,14 @@ app.post("/api/robot-launch-browser", async (req, res) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     res.status(201).json({ message: `Browser ${req.body.uid} closed`, data: true });
 })
-
+app.post("/api/robot-put-uid", async (req, res) => {
+    const newRobot = req.body; // dữ liệu JSON được gửi từ client
+    // robots.push(newRobot); // Lưu trữ robot mới vào mảng
+    // console.log('Dữ liệu nhận được:', newRobot);
+    robots = newRobot;
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    res.status(201).json({ message: `Update data`, data: robots });
+})
 // Middleware xử lý lỗi (nếu không tìm thấy route nào phù hợp)
 app.use((req, res, next) => {
     res.status(404).send('Không tìm thấy trang yêu cầu!');

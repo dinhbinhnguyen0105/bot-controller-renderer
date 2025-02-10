@@ -1,26 +1,11 @@
 import { useEffect, useState } from "react";
 import styles from "./Modify.module.css";
 
-// {
-//     "info": {
-//         "date": "25-02-08",
-//         "uid": "61570948720725",
-//         "username": "test-1",
-//         "type": "takecare"
-//     },
-//     "config": {
-//         "addFriend": true,
-//         "reelAndLike": true,
-//         "joinGroup": true,
-//         "postNewFeed": true,
-//         "postGroups": true
-//     }
-// }
-
-const Modify = ({ uidInfo, callAPIs, isOpen, onClose }) => {
-    // const [info, setInfo] = useState(uidInfo);
-    console.log(uidInfo);
+const Modify = ({ uidInfo, callAPIs, handleInputChange, isOpen, onClose }) => {
     if (!isOpen) { return null; };
+
+    console.log(uidInfo)
+
 
     return (
         <>
@@ -34,30 +19,41 @@ const Modify = ({ uidInfo, callAPIs, isOpen, onClose }) => {
                     </button>
                     <div className={styles.modalContent}>
                         <div className="header">{uidInfo.info.uid} - {uidInfo.info.username}</div>
-                        <div className="items">
+                        <div className="content">
                             {uidInfo.config.addFriend && (
-                                <div className="item">
-                                    <p>Add friends: Count: <input type="text" /> GID source: <input type="text" /></p>
+                                <div className="contentItem">
+                                    <p>Add friends: Count: <input
+                                        type="text"
+                                        onChange={e => handleInputChange(uidInfo.info.uid, { actions: { addFirendCount: e.target.value } })}
+                                        value={uidInfo?.actions?.addFirendCount}
+                                    /> GID source: <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { addFirendSource: e.target.value } })} /></p>
                                 </div>
                             )}
                             {uidInfo.config.reelAndLike && (
-                                <p>Watch reel & like: Count: <input type="text" /></p>
+                                <div className="contentItem">
+                                    <p>Watch reel & like: Count: <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { reelAndLikeCount: e.target.value } })} /></p>
+                                </div>
                             )}
                             {uidInfo.config.joinGroup && (
-                                <div className="item">
-                                    <p>Join new groups: Source <input type="file" /></p>
+                                <div className="contentItem">
+                                    <p>Join new groups: Count: <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { joinGroupCount: e.target.value } })} /> Source <input type="file" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { joinGroupSource: e.target.files[0] } })} /></p>
                                 </div>
                             )}
                             {uidInfo.config.postNewFeed && (
-                                <div className="item">
-                                    <span><strong>Post</strong> a new article with</span>
+                                <div className="contentItem">
+                                    <p>Post new feed: PID <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postNewFeedPID: e.target.value } })} /></p>
                                 </div>
                             )}
                             {uidInfo.config.postGroups && (
-                                <div className="item">
-
+                                <div className="contentItem">
+                                    <p>Post groups: PID <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postGroupsPID: e.target.value } })} />GIDs <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postGroupsGID: e.target.value } })} /></p>
                                 </div>
                             )}
+                        </div>
+                        <div className="footer">
+                            <button
+                                onClick={e => callAPIs(e, "robot:put-uid", uidInfo)}
+                            >Save</button>
                         </div>
                     </div>
                 </div>
