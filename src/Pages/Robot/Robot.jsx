@@ -21,7 +21,6 @@ const Robot = () => {
             </button>
             {isCreateOpen && <Create isOpen={isCreateOpen} onClose={closeCreate} />}
             {configModalDisplay && <Config isOpen={configModalDisplay} onClose={closeConfig} uidInfo={uidInfo} />}
-            {/* <h1>Robot page</h1> */}
             <List setUidInfo={(info) => { setUidInfo(info); openConfig(); }} listUid={listUid} setListUid={setListUid} />
         </div>
     );
