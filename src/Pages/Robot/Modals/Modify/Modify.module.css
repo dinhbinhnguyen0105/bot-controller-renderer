@@ -24,17 +24,18 @@
 
 .modalContainer {
     position: relative;
-    min-width: 200px;
-    min-height: 200px;
+    width: 480px;
+    height: auto;
     border-radius: 8px;
     background-color: #fff;
 }
 
 .modalContent {
-    padding: 1.6rem 2rem;
+    padding: 1rem 1rem;
 }
 
 .closeBtn {
+    display: none;
     position: absolute;
     margin: 8px;
     background-color: transparent;
@@ -44,8 +45,8 @@
 }
 
 .closeBtn svg {
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 1rem;
+    height: 1rem;
 }
 
 .closeBtn:hover svg path {
@@ -57,7 +58,6 @@
 }
 
 .header {
-    margin: 1rem 0;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -66,72 +66,65 @@
     padding-bottom: 0.6rem;
 }
 
-.header label {
-    display: inline-block;
-    width: 100%;
-    height: 2rem;
-    line-height: 2rem;
-    text-align: center;
-    background-color: rgb(242, 242, 242);
-}
-
-.header label:hover {
-    background-color: rgb(228, 230, 233);
-}
-
-.header label:first-child {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-}
-
-.header label:last-child {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
-
-.header label.active {
-    background-color: rgb(23, 107, 251);
-    color: #fff;
+.header h3 {
+    margin: 0;
 }
 
 .content {
-    padding: 0 1.2rem;
-    display: flex;
-    flex-direction: row;
-    min-width: 400px;
-}
-
-.form {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    align-items: start;
 }
 
-.formItem {
+.contentItem {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: start;
     align-items: center;
     width: 100%;
-    margin: 0.2rem 0;
-    gap: 0.6rem;
+    margin: 8px 0;
 }
 
-.form label {
+.itemTitle {
+    font-size: 0.84rem;
+    margin: 0;
+    font-weight: 700;
+    white-space: nowrap;
+    min-width: 30%;
+    text-align: left;
+}
+
+.itemContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.itemInputContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+.itemLabel {
     font-size: 0.8rem;
+    font-weight: 500;
+    width: 3rem;
 }
 
-.formItem input {
-    height: 1.6rem;
-    min-width: 60%;
-    padding: 0 1rem;
+.itemInput {
+    height: 1.2rem;
+    width: 6rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 }
-
-.import {}
 
 .footer {
     padding-top: 0.6rem;
-    /* margin: 1rem 0; */
     margin-top: 1rem;
     width: 100%;
     display: flex;
@@ -146,14 +139,6 @@
     border-radius: 8px;
     border: none;
     color: #fff;
-}
-
-.footer button:first-child {
-    background-color: rgba(11, 36, 251, 1);
-}
-
-.footer button:first-child:hover {
-    background-color: rgba(11, 36, 251, .7);
 }
 
 .footer button:last-child {

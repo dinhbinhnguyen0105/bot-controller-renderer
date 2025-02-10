@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import styles from "./Modify.module.css";
 
 const Modify = ({ uidInfo, callAPIs, handleInputChange, isOpen, onClose }) => {
@@ -14,82 +13,136 @@ const Modify = ({ uidInfo, callAPIs, handleInputChange, isOpen, onClose }) => {
                         </svg>
                     </button>
                     <div className={styles.modalContent}>
-                        <div className="header">{uidInfo.info.uid} - {uidInfo.info.username}</div>
-                        <div className="content">
+                        <div className={styles.header}><h3>{uidInfo.info.uid} - {uidInfo.info.username}</h3></div>
+                        <div className={styles.content}>
                             {uidInfo.config.addFriend && (
-                                <div className="contentItem">
-                                    <p>Add friends: Count:
-                                        <input
-                                            type="text"
-                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { addFirendCount: e.target.value } })}
-                                            value={uidInfo?.actions?.addFirendCount || ""}
-                                        /> GID source:
-                                        <input
-                                            type="text"
-                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { addFirendSource: e.target.value } })}
-                                            value={uidInfo?.actions?.addFirendSource || ""}
-                                        />
-                                    </p>
+                                <div className={styles.contentItem}>
+                                    <h4 className={styles.itemTitle}>Add friends: </h4>
+                                    <div className={styles.itemContainer}>
+                                        <div className={styles.itemInputContainer}>
+                                            <label htmlFor="addFriend-count" className={styles.itemLabel}>Count
+                                            </label>
+                                            <input
+                                                className={styles.itemInput}
+                                                id="addFriend-count"
+                                                type="text"
+                                                onChange={e => handleInputChange(uidInfo.info.uid, { actions: { addFriendCount: e.target.value } })}
+                                                value={uidInfo?.actions?.addFriendCount || ""}
+                                            />
+                                        </div>
+                                        <div className={styles.itemInputContainer}>
+                                            <label htmlFor="addFriend-source" className={styles.itemLabel}>GID
+                                            </label>
+                                            <input
+                                                className={styles.itemInput}
+                                                id="addFriend-source"
+                                                type="text"
+                                                onChange={e => handleInputChange(uidInfo.info.uid, { actions: { addFriendSource: e.target.value } })}
+                                                value={uidInfo?.actions?.addFriendSource || ""}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                             {uidInfo.config.reelAndLike && (
-                                <div className="contentItem">
-                                    <p>Watch reel & like: Count:
-                                        <input
-                                            type="text"
-                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { reelAndLikeCount: e.target.value } })}
-                                            value={uidInfo?.actions?.reelAndLikeCount || ""}
-                                        />
-                                    </p>
+                                <div className={styles.contentItem}>
+                                    <div className={styles.contentItem}>
+                                        <h4 className={styles.itemTitle}>Watch reel & like: </h4>
+                                        <div className={styles.itemContainer}>
+                                            <div className={styles.itemInputContainer}>
+                                                <label htmlFor="reelAndLike-count" className={styles.itemLabel}>Count
+                                                </label>
+                                                <input
+                                                    className={styles.itemInput}
+                                                    id="reelAndLike-count"
+                                                    type="text"
+                                                    onChange={e => handleInputChange(uidInfo.info.uid, { actions: { reelAndLikeCount: e.target.value } })}
+                                                    value={uidInfo?.actions?.reelAndLikeCount || ""}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                             {uidInfo.config.joinGroup && (
-                                <div className="contentItem">
-                                    <p>Join new groups: Count:
-                                        <input
-                                            type="text"
-                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { joinGroupCount: e.target.value } })}
-                                            value={uidInfo?.actions?.joinGroupCount}
-                                        />
-                                        Source
-                                        <input
-                                            type="file"
-                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { joinGroupSource: e.target.files[0] } })}
-                                        // value={uidInfo?.actions?.joinGroupSource}
-                                        />
-                                    </p>
-                                </div>
+                                <>
+                                    <div className={styles.contentItem}>
+                                        <h4 className={styles.itemTitle}>Join groups: </h4>
+                                        <div className={styles.itemContainer}>
+                                            <div className={styles.itemInputContainer}>
+                                                <label htmlFor="joinGroupCount-count" className={styles.itemLabel}>Count
+                                                </label>
+                                                <input
+                                                    className={styles.itemInput}
+                                                    id="joinGroupCount-count"
+                                                    type="text"
+                                                    onChange={e => handleInputChange(uidInfo.info.uid, { actions: { joinGroupCount: e.target.value } })}
+                                                    value={uidInfo?.actions?.joinGroupCount || ""}
+                                                />
+                                            </div>
+                                            <div className={styles.itemInputContainer}>
+                                                <label htmlFor="joinGroupSource-source" className={styles.itemLabel}>GID
+                                                </label>
+                                                <input
+                                                    className={styles.itemInput}
+                                                    type="file"
+                                                    onChange={e => handleInputChange(uidInfo.info.uid, { actions: { joinGroupSource: e.target.files[0] } })}
+                                                    style={{ border: "none" }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
                             )}
                             {uidInfo.config.postNewFeed && (
-                                <div className="contentItem">
-                                    <p>Post new feed: PID
-                                        <input
-                                            type="text"
-                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postNewFeedPID: e.target.value } })}
-                                            value={uidInfo?.actions?.postNewFeedPID}
-                                        />
-                                    </p>
+                                <div className={styles.contentItem}>
+                                    <h4 className={styles.itemTitle}>Post new feed: </h4>
+                                    <div className={styles.itemContainer}>
+                                        <div className={styles.itemInputContainer}>
+                                            <label htmlFor="postNewFeedPID" className={styles.itemLabel}>PID
+                                            </label>
+                                            <input
+                                                className={styles.itemInput}
+                                                id="postNewFeedPID"
+                                                type="text"
+                                                onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postNewFeedPID: e.target.value } })}
+                                                value={uidInfo?.actions?.postNewFeedPID || ""}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                             {uidInfo.config.postGroups && (
-                                <div className="contentItem">
-                                    <p>Post groups: PID
-                                        <input
-                                            type="text"
-                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postGroupsPID: e.target.value } })}
-                                            value={uidInfo?.actions?.postGroupsPID}
-                                        />
-                                        GIDs
-                                        <input
-                                            type="text"
-                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postGroupsGID: e.target.value } })}
-                                            value={uidInfo?.actions?.postGroupsGID}
-                                        />
-                                    </p>
+                                <div className={styles.contentItem}>
+                                    <h4 className={styles.itemTitle}>Post groups: </h4>
+                                    <div className={styles.itemContainer}>
+                                        <div className={styles.itemInputContainer}>
+                                            <label htmlFor="postGroupsPID" className={styles.itemLabel}>PID
+                                            </label>
+                                            <input
+                                                className={styles.itemInput}
+                                                id="postGroupsPID"
+                                                type="text"
+                                                onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postGroupsPID: e.target.value } })}
+                                                value={uidInfo?.actions?.postGroupsPID || ""}
+                                            />
+                                        </div>
+                                        <div className={styles.itemInputContainer}>
+                                            <label htmlFor="postGroupsGID" className={styles.itemLabel}>GIDs
+                                            </label>
+                                            <input
+                                                className={styles.itemInput}
+                                                id="postGroupsGID"
+                                                type="text"
+                                                onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postGroupsGID: e.target.value } })}
+                                                value={uidInfo?.actions?.postGroupsGID || ""}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                         </div>
-                        <div className="footer">
+                        <div className={styles.footer}>
                             <button
                                 onClick={e => callAPIs(e, "robot:put-uid", uidInfo)}
                             >Save</button>
