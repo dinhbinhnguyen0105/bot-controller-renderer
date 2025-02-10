@@ -52,29 +52,78 @@ const Import = ({ setState }) => {
     );
 }
 
-const Create = ({ isOpen, onClose, callAPIs }) => {
-    const today = new Date();
-    const formattedDate = new Intl.DateTimeFormat('en-CA', {
-        year: '2-digit',
-        month: '2-digit',
-        day: '2-digit',
-    }).format(today);
-
-    const [form, setForm] = useState({
-        date: formattedDate,
-        uid: "",
-        password: "",
-        twoFA: "",
-        email: "",
-        phone: "",
-    });
-    const [selectedFile, setSelectedFile] = useState(null);
+const Create = ({ createForm, setCreateForm, importFile, setImportFile, isOpen, onClose, callAPIs }) => {
     const [isForm, setIsForm] = useState(true);
-    const [isSaving, setIsSaving] = useState(false);
-    const [isOpening, setIsOpening] = useState(false);
+    if (!isOpen) { return null; };
+
+    const handleSave = (e) => {
+        if (isForm) {
+            if (!createForm.uid) { return; };
+            callAPIs(e, "robot:create-uid", createForm);
+        } else {
+            if (!createForm) { return; };
+            callAPIs(e, "robot:import-uid", importFile);
+        };
+    };
+
+    const handleSaveAndOpen = e => {
+        if (!createForm.uid) { return; };
+        callAPIs(e, "robot:create-uid", createForm);
+        callAPIs(e, "robot:launch-browser", createForm.uid);
+    }
 
     return (
         <>
+            return (
+            <div className={styles.modalOverlay} onClick={onClose}>
+                <div className={styles.modalContainer} onClick={e => e.stopPropagation()}>
+                    <button className={styles.closeBtn} onClick={onClose}>
+                        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" />
+                            <path d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" />
+                        </svg>
+                    </button>
+                    <div className={styles.modalContent}>
+                        <div className={styles.header}>
+                            <label htmlFor="form" className={`${isForm ? styles.active : ""}`}>
+                                Form
+                                <input
+                                    id="form"
+                                    type="radio"
+                                    value="form"
+                                    name="isForm"
+                                    checked={isForm}
+                                    onChange={() => setIsForm(true)}
+                                    hidden
+                                />
+                            </label>
+                            <label htmlFor="import" className={`${!isForm ? styles.active : ""}`}>
+                                Import
+                                <input
+                                    id="import"
+                                    type="radio"
+                                    value="import"
+                                    name="isForm"
+                                    checked={!isForm}
+                                    onChange={() => setIsForm(false)}
+                                    hidden
+                                />
+                            </label>
+                        </div>
+                        <div className={styles.content}>
+                            {isForm ? <Form state={createForm} setState={setCreateForm} /> : <Import setState={setImportFile} />}
+                        </div>
+                        <div className={styles.footer}>
+                            {/* {isForm && (<button onClick={onLogin} disabled={isOpening}>{isOpening ? "Logging in ..." : "Save & login"}</button>)} */}
+                            <button onClick={handleSaveAndOpen}>Save & open</button>
+                            <button onClick={handleSave}>Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            );
         </>
     )
 }
+
+export default Create

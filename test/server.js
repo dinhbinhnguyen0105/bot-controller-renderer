@@ -17,7 +17,7 @@ let robots = [
         info: {
             date: "25-02-08",
             uid: "61570948720725",
-            username: "test-1",
+            // username: "test-1",
             type: "takecare",
         },
         config: {
@@ -65,7 +65,28 @@ app.post("/api/robot-put-uid", async (req, res) => {
     // console.log('Dữ liệu nhận được:', newRobot);
     robots = newRobot;
     await new Promise(resolve => setTimeout(resolve, 1000));
-    res.status(201).json({ message: `Update data`, data: robots });
+    res.status(201).json({ message: `Updated data`, data: robots });
+})
+app.post("/api/robot-del-uid", async (req, res) => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    res.status(201).json({ message: `Updated data`, data: robots });
+})
+app.post("/api/robot-import-uid", async (req, res) => {
+    console.log(req.body.file);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    res.status(201).json({ message: `Updated data`, data: robots });
+})
+app.post("/api/robot-create-uid", async (req, res) => {
+    robots.push(req.body.uid);
+    console.log(robots);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    res.status(201).json({ message: `Updated data`, data: robots });
+})
+app.post("/api/robot-get-name", async (req, res) => {
+    const index = robots.findIndex(robot => robot.info.uid === req.body.uid);
+    robots[index] = { ...robots[index], info: { ...robots[index].info, username: "NDB" } }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    res.status(201).json({ message: `Updated data`, data: robots });
 })
 // Middleware xử lý lỗi (nếu không tìm thấy route nào phù hợp)
 app.use((req, res, next) => {

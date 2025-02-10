@@ -32,68 +32,67 @@ const List = ({ listUID, setListUID, callAPIs, handleInputChange }) => {
                     <tbody>
                         {listUID.map(({ info, config }, index) => (
                             <tr key={index}>
-                                <td>{info.date}</td>
-                                <td>{info.uid}</td>
-                                <td>{info.username ? (
+                                <td>{info?.date}</td>
+                                <td>{info?.uid}</td>
+                                <td>{info?.username ? (
                                     <button onClick={(e) => callAPIs(e, "robot:launch-browser", info.uid)}>Open {info.username}</button>
 
                                 ) : (
                                     <button onClick={(e) => callAPIs(e, "robot:get-name", info.uid)}>Get username</button>
-
                                 )}</td>
                                 <td>
                                     <input
                                         type="text"
-                                        value={info.type || ""}
+                                        value={info?.type || ""}
                                         onChange={e => handleInputChange(info.uid, { info: { type: e.target.value } })}
                                     />
                                 </td>
                                 <td>
                                     <input
                                         type="text"
-                                        value={info.proxy || ""}
+                                        value={config?.proxy || ""}
                                         onChange={e => handleInputChange(info.uid, { config: { proxy: e.target.value } })}
                                     />
                                 </td>
                                 <td>
                                     <input
                                         type="checkbox"
-                                        checked={config.addFriend || false}
+                                        checked={config?.addFriend || false}
                                         onChange={e => handleInputChange(info.uid, { config: { addFriend: e.target.checked } })}
                                     />
                                 </td>
                                 <td>
                                     <input
                                         type="checkbox"
-                                        checked={config.reelAndLike || false}
+                                        checked={config?.reelAndLike || false}
                                         onChange={e => handleInputChange(info.uid, { config: { reelAndLike: e.target.checked } })}
                                     />
                                 </td>
                                 <td>
                                     <input
                                         type="checkbox"
-                                        checked={config.joinGroup || false}
+                                        checked={config?.joinGroup || false}
                                         onChange={e => handleInputChange(info.uid, { config: { joinGroup: e.target.checked } })}
                                     />
                                 </td>
                                 <td>
                                     <input
                                         type="checkbox"
-                                        checked={config.postNewFeed || false}
+                                        checked={config?.postNewFeed || false}
                                         onChange={e => handleInputChange(info.uid, { config: { postNewFeed: e.target.checked } })}
                                     />
                                 </td>
                                 <td>
                                     <input
                                         type="checkbox"
-                                        checked={config.postGroups || false}
+                                        checked={config?.postGroups || false}
                                         onChange={e => handleInputChange(info.uid, { config: { postGroups: e.target.checked } })}
                                     />
                                 </td>
                                 <td>
-                                    <button onDoubleClick={() => callAPIs("robot:del-uid", info.uid)}>Delete</button>
+                                    <button onDoubleClick={(e) => callAPIs(e, "robot:del-uid", info.uid)}>Delete</button>
                                 </td>
-                                <td><button onClick={(e) => callAPIs(e, "robot:config-uid", { info: info, config: config })}>Config</button></td>
+                                <td><button onClick={(e) => callAPIs(e, "robot:config-uid", index)}>Config</button></td>
                             </tr>
                         ))}
                     </tbody>

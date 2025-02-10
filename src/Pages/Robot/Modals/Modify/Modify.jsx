@@ -3,10 +3,6 @@ import styles from "./Modify.module.css";
 
 const Modify = ({ uidInfo, callAPIs, handleInputChange, isOpen, onClose }) => {
     if (!isOpen) { return null; };
-
-    console.log(uidInfo)
-
-
     return (
         <>
             <div className={styles.modalOverlay} onClick={onClose}>
@@ -22,31 +18,74 @@ const Modify = ({ uidInfo, callAPIs, handleInputChange, isOpen, onClose }) => {
                         <div className="content">
                             {uidInfo.config.addFriend && (
                                 <div className="contentItem">
-                                    <p>Add friends: Count: <input
-                                        type="text"
-                                        onChange={e => handleInputChange(uidInfo.info.uid, { actions: { addFirendCount: e.target.value } })}
-                                        value={uidInfo?.actions?.addFirendCount}
-                                    /> GID source: <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { addFirendSource: e.target.value } })} /></p>
+                                    <p>Add friends: Count:
+                                        <input
+                                            type="text"
+                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { addFirendCount: e.target.value } })}
+                                            value={uidInfo?.actions?.addFirendCount || ""}
+                                        /> GID source:
+                                        <input
+                                            type="text"
+                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { addFirendSource: e.target.value } })}
+                                            value={uidInfo?.actions?.addFirendSource || ""}
+                                        />
+                                    </p>
                                 </div>
                             )}
                             {uidInfo.config.reelAndLike && (
                                 <div className="contentItem">
-                                    <p>Watch reel & like: Count: <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { reelAndLikeCount: e.target.value } })} /></p>
+                                    <p>Watch reel & like: Count:
+                                        <input
+                                            type="text"
+                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { reelAndLikeCount: e.target.value } })}
+                                            value={uidInfo?.actions?.reelAndLikeCount || ""}
+                                        />
+                                    </p>
                                 </div>
                             )}
                             {uidInfo.config.joinGroup && (
                                 <div className="contentItem">
-                                    <p>Join new groups: Count: <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { joinGroupCount: e.target.value } })} /> Source <input type="file" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { joinGroupSource: e.target.files[0] } })} /></p>
+                                    <p>Join new groups: Count:
+                                        <input
+                                            type="text"
+                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { joinGroupCount: e.target.value } })}
+                                            value={uidInfo?.actions?.joinGroupCount}
+                                        />
+                                        Source
+                                        <input
+                                            type="file"
+                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { joinGroupSource: e.target.files[0] } })}
+                                        // value={uidInfo?.actions?.joinGroupSource}
+                                        />
+                                    </p>
                                 </div>
                             )}
                             {uidInfo.config.postNewFeed && (
                                 <div className="contentItem">
-                                    <p>Post new feed: PID <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postNewFeedPID: e.target.value } })} /></p>
+                                    <p>Post new feed: PID
+                                        <input
+                                            type="text"
+                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postNewFeedPID: e.target.value } })}
+                                            value={uidInfo?.actions?.postNewFeedPID}
+                                        />
+                                    </p>
                                 </div>
                             )}
                             {uidInfo.config.postGroups && (
                                 <div className="contentItem">
-                                    <p>Post groups: PID <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postGroupsPID: e.target.value } })} />GIDs <input type="text" onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postGroupsGID: e.target.value } })} /></p>
+                                    <p>Post groups: PID
+                                        <input
+                                            type="text"
+                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postGroupsPID: e.target.value } })}
+                                            value={uidInfo?.actions?.postGroupsPID}
+                                        />
+                                        GIDs
+                                        <input
+                                            type="text"
+                                            onChange={e => handleInputChange(uidInfo.info.uid, { actions: { postGroupsGID: e.target.value } })}
+                                            value={uidInfo?.actions?.postGroupsGID}
+                                        />
+                                    </p>
                                 </div>
                             )}
                         </div>
