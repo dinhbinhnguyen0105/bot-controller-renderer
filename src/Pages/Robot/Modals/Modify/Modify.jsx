@@ -2,6 +2,7 @@ import styles from "./Modify.module.css";
 
 const Modify = ({ uidInfo, callAPIs, handleInputChange, isOpen, onClose }) => {
     if (!isOpen) { return null; };
+    console.log(uidInfo);
     return (
         <>
             <div className={styles.modalOverlay} onClick={onClose}>

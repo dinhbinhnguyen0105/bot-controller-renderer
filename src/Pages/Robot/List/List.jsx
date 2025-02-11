@@ -10,7 +10,7 @@ const List = ({ listUID, setListUID, callAPIs, handleInputChange }) => {
         });
         setListUID(sorted);
     };
-
+    console.log(listUID);
     return (
         <div className="list">
             {listUID.length > 0 ? (
@@ -36,7 +36,6 @@ const List = ({ listUID, setListUID, callAPIs, handleInputChange }) => {
                                 <td>{info?.uid}</td>
                                 <td>{info?.username ? (
                                     <button onClick={(e) => callAPIs(e, "robot:launch-browser", info.uid)}>Open {info.username}</button>
-
                                 ) : (
                                     <button onClick={(e) => callAPIs(e, "robot:get-name", info.uid)}>Get username</button>
                                 )}</td>

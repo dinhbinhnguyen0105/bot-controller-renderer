@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import styles from "./Robot.module.css";
+// import styles from "./Robot.module.css";
 import List from "./List/List";
 import Modify from "./modals/Modify/Modify";
 import Create from "./modals/Create/Create";
@@ -39,162 +39,267 @@ const Robot = () => {
     }, []);
 
     const callAPIs = useCallback((e, method, value) => {
-        const serverUrl = "http://localhost:3000/api";
-        const defaultLabel = e.target.textContent;
-        switch (method) {
-            case "robot:list-uid": {
-                fetch(serverUrl)
-                    .then(res => res.json())
-                    .then(res => setListUID(res))
-                    .catch(err => console.error(err));
-                break;
-            }
-            case "robot:create-uid": {
-                e.target.textContent = "Saving ...";
-                e.target.disabled = true;
-                fetch(`${serverUrl}/robot-create-uid`, {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ uid: { info: value } })
-                })
-                    .then(res => res.json())
-                    .then(res => {
+        if (window?.electronAPIs) {
+            const defaultLabel = e.target.textContent;
+            switch (method) {
+                case "robot:list-uid": {
+                    window.electronAPIs.send(method, { payload: null });
+                    break;
+                }
+                case "robot:create-uid": {
+                    e.target.textContent = "Saving ...";
+                    e.target.disabled = true;
+                    window.electronAPIs.send(method, { payload: { uid: value } });
+                    window.electronAPIs.on(method, res => {
+                        if (res.data) {
+                            setListUID(res.data);
+                            setCreateForm({
+                                date: formattedDate,
+                                uid: "",
+                                password: "",
+                                twoFA: "",
+                                email: "",
+                                phone: "",
+                            });
+                        };
+                        e.target.textContent = defaultLabel;
+                        e.target.disabled = false;
+                    });
+                    break;
+                }
+                case "robot:import-uid": {
+                    e.target.textContent = "Importing ...";
+                    e.target.disabled = true;
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const base64 = reader.result;
+                        console.log(base64);
+                        window.electronAPIs.send(method, { payload: base64 });
+                        window.electronAPIs.on(method, res => {
+                            if (res.data) {
+                                setListUID(res.data);
+                            };
+                            e.target.textContent = defaultLabel;
+                            e.target.disabled = false;
+                        });
+                    };
+                    reader.readAsDataURL(value);
+                    break;
+                }
+                case "robot:put-uid": {
+                    e.target.textContent = "Saving ...";
+                    e.target.disabled = true;
+                    window.electronAPIs.send(method, { payload: value });
+                    window.electronAPIs.on(method, res => {
                         setListUID(res.data);
-                        console.log(res);
-                        setCreateForm({
-                            date: formattedDate,
-                            uid: "",
-                            password: "",
-                            twoFA: "",
-                            email: "",
-                            phone: "",
-                        })
                         e.target.textContent = defaultLabel;
                         e.target.disabled = false;
                     })
-                    .catch(err => {
+                    break;
+                }
+                case "robot:del-uid": {
+                    e.target.textContent = "Deleting ...";
+                    e.target.disabled = true;
+                    window.electronAPIs.send(method, { payload: value });
+                    window.electronAPIs.on(method, res => {
+                        setListUID(res.data);
                         e.target.textContent = defaultLabel;
-                        console.error(err);
+                        e.target.disabled = false;
                     });
-                break;
+                    break;
+                }
+                case "robot:config-uid": {
+                    console.log(value);
+                    setModifyIndex(value);
+                    setModify(true);
+                    break;
+                }
+                case "robot:launch-browser": {
+                    e.target.textContent = "Opening ...";
+                    e.target.disabled = true;
+                    window.electronAPIs.send(method, { payload: value });
+                    window.electronAPIs.on(method, res => {
+                        setListUID(res.data);
+                        e.target.textContent = defaultLabel;
+                        e.target.disabled = false;
+                    });
+
+                    break;
+                }
+                case "robot:get-name": {
+                    e.target.textContent = "Getting ..."
+                    e.target.disabled = true;
+                    window.electronAPIs.send(method, { payload: value });
+                    window.electronAPIs.on(method, res => {
+                        setListUID(res.data);
+                        e.target.textContent = defaultLabel;
+                        e.target.disabled = false;
+                    })
+                    break;
+                }
+
+                default: throw new Error("Invalid method");
+
             }
-            case "robot:import-uid": {
-                e.target.textContent = "Importing ...";
-                e.target.disabled = true;
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const base64 = reader.result;
-                    fetch(`${serverUrl}/robot-import-uid`, {
+        } else {
+            const serverUrl = "http://localhost:3000/api";
+            const defaultLabel = e.target.textContent;
+            switch (method) {
+                case "robot:list-uid": {
+                    fetch(serverUrl)
+                        .then(res => res.json())
+                        .then(res => setListUID(res))
+                        .catch(err => console.error(err));
+                    break;
+                }
+                case "robot:create-uid": {
+                    e.target.textContent = "Saving ...";
+                    e.target.disabled = true;
+                    fetch(`${serverUrl}/robot-create-uid`, {
                         method: "POST",
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ file: base64 })
+                        body: JSON.stringify({ uid: { info: value } })
                     })
                         .then(res => res.json())
                         .then(res => {
                             setListUID(res.data);
                             console.log(res);
-                            e.target.disabled = false;
+                            setCreateForm({
+                                date: formattedDate,
+                                uid: "",
+                                password: "",
+                                twoFA: "",
+                                email: "",
+                                phone: "",
+                            })
                             e.target.textContent = defaultLabel;
-                            setImportFile(null)
+                            e.target.disabled = false;
                         })
                         .catch(err => {
                             e.target.textContent = defaultLabel;
                             console.error(err);
                         });
-                };
-                reader.readAsDataURL(value);
-                break;
-            }
-            case "robot:put-uid": {
-                e.target.textContent = "Saving ...";
-                e.target.disabled = true;
-                fetch(`${serverUrl}/robot-put-uid`, {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(listUID)
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        setListUID(res.data);
-                        console.log(res);
-                        e.target.textContent = defaultLabel;
-                        e.target.disabled = false;
+                    break;
+                }
+                case "robot:import-uid": {
+                    e.target.textContent = "Importing ...";
+                    e.target.disabled = true;
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const base64 = reader.result;
+                        fetch(`${serverUrl}/robot-import-uid`, {
+                            method: "POST",
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ file: base64 })
+                        })
+                            .then(res => res.json())
+                            .then(res => {
+                                setListUID(res.data);
+                                console.log(res);
+                                e.target.disabled = false;
+                                e.target.textContent = defaultLabel;
+                                setImportFile(null)
+                            })
+                            .catch(err => {
+                                e.target.textContent = defaultLabel;
+                                console.error(err);
+                            });
+                    };
+                    reader.readAsDataURL(value);
+                    break;
+                }
+                case "robot:put-uid": {
+                    e.target.textContent = "Saving ...";
+                    e.target.disabled = true;
+                    fetch(`${serverUrl}/robot-put-uid`, {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(listUID)
                     })
-                    .catch(err => {
-                        e.target.textContent = defaultLabel;
-                        console.error(err);
-                    });
-                break;
-            }
-            case "robot:del-uid": {
-                e.target.textContent = "Deleting ...";
-                e.target.disabled = true;
-                fetch(`${serverUrl}/robot-del-uid`, {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ uid: value })
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        setListUID(res.data)
-                        console.log(res);
-                        e.target.textContent = defaultLabel;
-                        e.target.disabled = false;
+                        .then(res => res.json())
+                        .then(res => {
+                            setListUID(res.data);
+                            console.log(res);
+                            e.target.textContent = defaultLabel;
+                            e.target.disabled = false;
+                        })
+                        .catch(err => {
+                            e.target.textContent = defaultLabel;
+                            console.error(err);
+                        });
+                    break;
+                }
+                case "robot:del-uid": {
+                    e.target.textContent = "Deleting ...";
+                    e.target.disabled = true;
+                    fetch(`${serverUrl}/robot-del-uid`, {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ uid: value })
                     })
-                    .catch(err => {
-                        e.target.textContent = defaultLabel;
-                        console.error(err);
-                    });
-                break;
-            }
-            case "robot:launch-browser": {
-                e.target.textContent = "Opening ...";
-                e.target.disabled = true;
-                fetch(`${serverUrl}/robot-launch-browser`, {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ uid: value })
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        console.log(res);
-                        e.target.disabled = false;
-                        e.target.textContent = defaultLabel;
+                        .then(res => res.json())
+                        .then(res => {
+                            setListUID(res.data)
+                            console.log(res);
+                            e.target.textContent = defaultLabel;
+                            e.target.disabled = false;
+                        })
+                        .catch(err => {
+                            e.target.textContent = defaultLabel;
+                            console.error(err);
+                        });
+                    break;
+                }
+                case "robot:launch-browser": {
+                    e.target.textContent = "Opening ...";
+                    e.target.disabled = true;
+                    fetch(`${serverUrl}/robot-launch-browser`, {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ uid: value })
                     })
-                    .catch(err => {
-                        e.target.textContent = defaultLabel;
-                        console.error(err);
-                    });
-                break;
-            }
-            case "robot:get-name": {
-                e.target.textContent = "Getting ..."
-                e.target.disabled = true;
-                fetch(`${serverUrl}/robot-get-name`, {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ uid: value })
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        setListUID(res.data)
-                        console.log(res);
-                        e.target.textContent = defaultLabel;
-                        e.target.disabled = false;
+                        .then(res => res.json())
+                        .then(res => {
+                            console.log(res);
+                            e.target.disabled = false;
+                            e.target.textContent = defaultLabel;
+                        })
+                        .catch(err => {
+                            e.target.textContent = defaultLabel;
+                            console.error(err);
+                        });
+                    break;
+                }
+                case "robot:get-name": {
+                    e.target.textContent = "Getting ..."
+                    e.target.disabled = true;
+                    fetch(`${serverUrl}/robot-get-name`, {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ uid: value })
                     })
-                    .catch(err => {
-                        e.target.textContent = defaultLabel;
-                        console.error(err);
-                    });
-                break;
-            }
-            case "robot:config-uid": {
-                setModifyIndex(value);
-                setModify(true);
-                break;
-            }
-            default: throw new Error("Invalid method");
-        };
+                        .then(res => res.json())
+                        .then(res => {
+                            setListUID(res.data)
+                            console.log(res);
+                            e.target.textContent = defaultLabel;
+                            e.target.disabled = false;
+                        })
+                        .catch(err => {
+                            e.target.textContent = defaultLabel;
+                            console.error(err);
+                        });
+                    break;
+                }
+                case "robot:config-uid": {
+                    setModifyIndex(value);
+                    setModify(true);
+                    break;
+                }
+                default: throw new Error("Invalid method");
+            };
+        }
+
     }, [listUID]);
 
     const handleInputChange = useCallback((uid, value) => {
