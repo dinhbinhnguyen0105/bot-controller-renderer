@@ -39,6 +39,10 @@ const Robot = () => {
     }, []);
 
     const callAPIs = useCallback((e, method, value) => {
+        const closestParent = e.target.closest("[data-uid]");
+        let currentUID = null;
+        if (closestParent) { currentUID = closestParent.getAttribute("data-uid"); };
+
         if (window?.electronAPIs) {
             const defaultLabel = e.target.textContent;
             switch (method) {
@@ -137,9 +141,7 @@ const Robot = () => {
                     })
                     break;
                 }
-
                 default: throw new Error("Invalid method");
-
             }
         } else {
             const serverUrl = "http://localhost:3000/api";

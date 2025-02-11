@@ -10,7 +10,6 @@ const List = ({ listUID, setListUID, callAPIs, handleInputChange }) => {
         });
         setListUID(sorted);
     };
-    console.log(listUID);
     return (
         <div className="list">
             {listUID.length > 0 ? (
@@ -31,7 +30,7 @@ const List = ({ listUID, setListUID, callAPIs, handleInputChange }) => {
                     </thead>
                     <tbody>
                         {listUID.map(({ info, config }, index) => (
-                            <tr key={index}>
+                            <tr key={index} data-uid={info.uid}>
                                 <td>{info?.date}</td>
                                 <td>{info?.uid}</td>
                                 <td>{info?.username ? (
