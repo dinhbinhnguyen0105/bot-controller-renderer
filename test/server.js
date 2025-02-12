@@ -1,41 +1,10 @@
 // server.js
-// const express = require('express'); // Import module Express
-import express from "express";
-import cors from "cors"; // Import module CORS
-
+const express = require('express'); // Import module Express
 const app = express();              // Tạo instance của Express
 const port = 3000;                  // Đặt cổng cho server
 
 // Middleware: cho phép parse dữ liệu JSON nếu cần (ví dụ: POST request)
 app.use(express.json());
-
-// Middleware: cho phép CORS
-app.use(cors());
-
-let robots = [
-    {
-        info: {
-            date: "25-02-08",
-            uid: "61570948720725",
-            // username: "test-1",
-            type: "takecare",
-        },
-        config: {
-            addFriend: true,
-        }
-    },
-    {
-        info: {
-            date: "25-02-08",
-            uid: "001",
-            username: "test-2",
-            type: "takecare",
-        },
-        config: {
-            addFriend: true,
-        }
-    },
-]; // Mảng lưu trữ dữ liệu robot
 
 // Định nghĩa route cho trang chủ
 app.get('/', (req, res) => {
@@ -43,51 +12,24 @@ app.get('/', (req, res) => {
 });
 
 // Định nghĩa thêm route ví dụ cho API user
-app.get('/api/robot', (req, res) => {
-    res.json(robots);
+app.get('/api/user', (req, res) => {
+    // Giả lập dữ liệu trả về
+    const user = {
+        id: 1,
+        name: 'Alice',
+        email: 'alice@example.com'
+    };
+    res.json(user);
 });
 
 // Route POST ví dụ (nhận dữ liệu từ client)
-app.post('/api/robot', (req, res) => {
-    const newRobot = req.body; // dữ liệu JSON được gửi từ client
-    robots.push(newRobot); // Lưu trữ robot mới vào mảng
-    console.log('Dữ liệu nhận được:', newRobot);
-    res.status(201).json({ message: 'Robot created successfully', data: newRobot });
+app.post('/api/user', (req, res) => {
+    const newUser = req.body; // dữ liệu JSON được gửi từ client
+    // Ở đây bạn có thể xử lý (lưu vào cơ sở dữ liệu, kiểm tra, …)
+    console.log('Dữ liệu nhận được:', newUser);
+    res.status(201).json({ message: 'User created successfully', data: newUser });
 });
-app.post("/api/robot-launch-browser", async (req, res) => {
-    console.log(req.body);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    res.status(201).json({ message: `Browser ${req.body.uid} closed`, data: true });
-})
-app.post("/api/robot-put-uid", async (req, res) => {
-    const newRobot = req.body; // dữ liệu JSON được gửi từ client
-    // robots.push(newRobot); // Lưu trữ robot mới vào mảng
-    // console.log('Dữ liệu nhận được:', newRobot);
-    robots = newRobot;
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    res.status(201).json({ message: `Updated data`, data: robots });
-})
-app.post("/api/robot-del-uid", async (req, res) => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    res.status(201).json({ message: `Updated data`, data: robots });
-})
-app.post("/api/robot-import-uid", async (req, res) => {
-    console.log(req.body.file);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    res.status(201).json({ message: `Updated data`, data: robots });
-})
-app.post("/api/robot-create-uid", async (req, res) => {
-    robots.push(req.body.uid);
-    console.log(robots);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    res.status(201).json({ message: `Updated data`, data: robots });
-})
-app.post("/api/robot-get-name", async (req, res) => {
-    const index = robots.findIndex(robot => robot.info.uid === req.body.uid);
-    robots[index] = { ...robots[index], info: { ...robots[index].info, username: "NDB" } }
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    res.status(201).json({ message: `Updated data`, data: robots });
-})
+
 // Middleware xử lý lỗi (nếu không tìm thấy route nào phù hợp)
 app.use((req, res, next) => {
     res.status(404).send('Không tìm thấy trang yêu cầu!');

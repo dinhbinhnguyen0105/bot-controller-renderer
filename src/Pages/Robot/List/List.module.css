@@ -1,0 +1,93 @@
+.listContainer {
+    margin: 0.8rem 0;
+}
+
+.searchInput {
+    float: right;
+    width: 20%;
+    padding: 4px 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s;
+}
+
+.searchInput:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.searchInput::placeholder {
+    color: #aaa;
+    opacity: 1;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.8rem;
+}
+
+th,
+td {
+    padding: 4px 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+}
+
+th:hover {
+    background-color: #e0e0e0;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.5);
+    margin: 0;
+}
+
+.cellBtn {
+    padding: 0 4px;
+}
+
+.cellBtn button {
+    width: 100%;
+}
+
+.cellCheck {
+    text-align: center;
+}
+
+.deleteBtn {
+    background-color: rgba(255, 46, 46, 1);
+    padding: 8px 12px;
+}
+
+.configBtn {
+    background-color: rgba(32, 207, 36, 1);
+    padding: 8px 12px;
+}
